@@ -7,7 +7,7 @@ def take_photo(photo_path):
 
 def upload_to_cloud_storage(photo_path, bucket_name, destination_blob_name):
     # Set up Google Cloud Storage client
-    storage_client = storage.Client()
+    storage_client = storage.Client('pullupnyc')
 
     # Get the bucket
     bucket = storage_client.bucket(bucket_name)
@@ -24,11 +24,25 @@ def upload_to_cloud_storage(photo_path, bucket_name, destination_blob_name):
 
     return photo_url
 
+def list_bucket_images(bucket_name):
+    storage_client = storage.Client('pullupnyc')
+    bucket = storage_client.bucket(bucket_name)
+    blobs = bucket.list_blobs()
+    image_names = [blob.name for blob in blobs if blob.content_type.startswith('image/')]
+    for name in image_names:
+        print(name)
+    return len(image_names)
+        
+bucket_name = 'raspberrypi4'
+list_bucket_images(bucket_name)
+
+        
+
 def main():
     # Configuration
     bucket_name = 'raspberrypi4'
     destination_blob_prefix = 'photo'
-    photo_counter = 1
+    photo_counter = list_bucket_images(bucket_name)
 
     while True:
         # Prompt the user to take a photo
@@ -55,4 +69,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
