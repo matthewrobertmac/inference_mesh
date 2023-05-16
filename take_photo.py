@@ -1,6 +1,74 @@
 import subprocess
 from google.cloud import storage
 
+class Photo:
+    def __init__(self, photo_id, bucket_name, client_name='pullupnyc'):
+        self.photo_id = photo_id
+        self.photo_path = f'photo{photo_id}.jpg'
+        self.bucket_name = bucket_name
+        self.storage_client = storage.Client(client_name)
+        self.bucket = self.storage_client.bucket(bucket_name)
+        self.blob = None
+
+    def take(self):
+        # Capture a photo using fswebcam
+        subprocess.run(['fswebcam', '-r', '1280x720', '--no-banner', self.photo_path])
+
+    def upload(self, destination_blob_prefix='photo'):
+        # Upload the photo to the bucket
+        self.blob = self.bucket.blob(f'{destination_blob_prefix}{self.photo_id}.jpg')
+        self.blob.upload_from_filename(self.photo_path)
+
+        # Make the uploaded photo publicly accessible
+        self.blob.make_public()
+
+        return self.blob.public_url
+
+    @staticmethod
+    def list_bucket_images(bucket_name):
+        storage_client = storage.Client('pullupnyc')
+        bucket = storage_client.bucket(bucket_name)
+        blobs = bucket.list_blobs()
+        image_names = [blob.name for blob in blobs if blob.content_type.startswith('image/')]
+        for name in image_names:
+            print(name)
+        return len(image_names)
+
+
+def main():
+    # Configuration
+    bucket_name = 'raspberrypi4'
+    photo_counter = Photo.list_bucket_images(bucket_name)
+
+    while True:
+        # Prompt the user to take a photo
+        input("Press Enter to take a photo (or 'q' to quit): ")
+
+        # Create a new photo instance
+        photo = Photo(photo_counter, bucket_name)
+
+        # Capture the photo
+        photo.take()
+
+        # Upload the photo to Google Cloud Storage
+        photo_url = photo.upload()
+
+        print(f"Photo uploaded to: {photo_url}")
+            
+        # Increment the photo counter
+        photo_counter += 1
+
+        # Check if the user wants to quit
+        if input("Continue taking photos? (y/n): ").lower() != 'y':
+            break
+
+if __name__ == '__main__':
+    main()
+
+"""
+import subprocess
+from google.cloud import storage
+
 def take_photo(photo_path):
     # Capture a photo using fswebcam
     subprocess.run(['fswebcam', '-r', '1280x720', '--no-banner', photo_path])
@@ -69,3 +137,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+"""
