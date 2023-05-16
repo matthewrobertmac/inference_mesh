@@ -1,0 +1,5 @@
+google-cloud-storage
+google-cloud-vision
+opencv-python-headless
+numpy
+
