@@ -228,7 +228,7 @@ def main():
 
         label = labels.get(obj.id, '')
         objects_by_label.setdefault(label, []).append(Object(label, obj.score, bbox))
-        print(label)
+        print(f"{label}, Probability: {obj.score}")
         
       
 
