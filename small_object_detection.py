@@ -223,16 +223,16 @@ def main():
           lambda size, img=tile: img.resize(size, Image.NEAREST))
       interpreter.invoke()
       objs = detect.get_objects(interpreter, args.score_threshold, scale)
-
+      print(obj.id)
+      print(f"{label}, Probability: {obj.score}")
+      print(bbox)
       for obj in objs:
         bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
         bbox = reposition_bounding_box(bbox, tile_location)
 
         label = labels.get(obj.id, '')
         objects_by_label.setdefault(label, []).append(Object(label, obj.score, bbox))
-        print(obj.id)
-        print(f"{label}, Probability: {obj.score}")
-        print(bbox)
+      
         
       
 
