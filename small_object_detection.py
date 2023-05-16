@@ -12,6 +12,8 @@ from pycoral.utils.edgetpu import make_interpreter
 
 Object = collections.namedtuple('Object', ['id', 'label', 'score', 'bbox'])
 
+object_labels_list = []
+
 def tiles_location_gen(img_size, tile_size, overlap):
   tile_width, tile_height = tile_size
   img_width, img_height = img_size
@@ -95,9 +97,14 @@ def main():
         objects.append(Object(obj.id, labels.get(obj.id, obj.id), obj.score, bbox))
 
   idxs = non_max_suppression(objects, args.iou_threshold)
+
+
   for idx in idxs:
     draw_object(draw, objects[idx], labels)
     print(f"Label: {objects[idx].label}, Probability: {objects[idx].score}")
+    object_labels = f"Label: {objects[idx].label}, Probability: {objects[idx].score}"
+    object_labels_list.append(object_labels)
+
 
   img.show()
 
@@ -105,5 +112,8 @@ def main():
     img.save(args.output)
     print(f"Saved result at {args.output}")
 
+
+  return object_labels_list
+
 if __name__ == '__main__':
-  main()
+  print(main())

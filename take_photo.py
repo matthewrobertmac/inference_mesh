@@ -2,6 +2,7 @@ import subprocess
 from os import makedirs
 from os.path import join
 from google.cloud import storage
+from small_object_detection import object_labels_list
 
 class Photo:
     GCS_BUCKET = "raspberrypi4"
@@ -19,6 +20,7 @@ class Photo:
         self.bucket = self.storage_client.bucket(bucket_name)
         self.blob = None
         self.processed_photo_path = None
+        self.added_labels = []
 
         # Ensure the photos directory exists
         makedirs(self.PHOTOS_DIR, exist_ok=True)
@@ -46,16 +48,29 @@ class Photo:
 
        # Update the path of the processed image
        self.processed_photo_path = join(f"{self.PREFIX}{self.photo_path}")
+   # Call the function from small_object_detection.py and get the object labels list
+
+   # Add the object labels list to added_labels
+       self.added_labels.extend(object_labels_list)
+       print(self.added_labels)
 
        # Save the processed image back to the bucket with a prefix
        new_blob = self.bucket.blob(join(self.PREFIX + self.blob.name))
+
        new_blob.upload_from_filename(self.processed_photo_path)
+       new_blob.metadata = {'added_labels': ','.join(self.added_labels)}
+       new_blob.patch()
+
+       #TODO: Add the processed image url as an attribute to the instance of the Photo class
 
 
     def upload(self, destination_blob_prefix='photo'):
         # Upload the photo to the bucket
         self.blob = self.bucket.blob(f'{destination_blob_prefix}{self.photo_id}.jpg')
         self.blob.upload_from_filename(self.photo_path)
+
+    #    self.blob.metadata = {'added_labels': (self.added_labels)}
+     #   self.blob.patch()
 
         # Make the uploaded photo publicly accessible
         self.blob.make_public()
@@ -94,6 +109,9 @@ def main():
         photo_url = photo.upload()
 
         print(f"Photo uploaded to: {photo_url}")
+
+      #  photo.added_labels.extend(object_labels_list)
+       # print(photo.added_labels)
             
         # Increment the photo counter
         photo_counter += 1
