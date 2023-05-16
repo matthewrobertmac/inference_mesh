@@ -212,6 +212,8 @@ def main():
   tile_sizes = [
       map(int, tile_size.split('x')) for tile_size in args.tile_sizes.split(',')
   ]
+
+  itemCount = []
   for tile_size in tile_sizes:
     for tile_location in tiles_location_gen(img_size, tile_size,
                                             args.tile_overlap):
@@ -228,6 +230,7 @@ def main():
 
         label = labels.get(obj.id, '')
         objects_by_label.setdefault(label, []).append(Object(label, obj.score, bbox))
+        print(obj.name)
         print(f"{label}, Probability: {obj.score}")
         print(bbox)
         
