@@ -207,7 +207,7 @@ def main():
   img = Image.open(args.input).convert('RGB')
   draw = ImageDraw.Draw(img)
 
-  objects_by_label = dict()
+  objects_by_label = dict() 
   img_size = img.size
   tile_sizes = [
       map(int, tile_size.split('x')) for tile_size in args.tile_sizes.split(',')
@@ -227,11 +227,14 @@ def main():
         bbox = reposition_bounding_box(bbox, tile_location)
 
         label = labels.get(obj.id, '')
-        objects_by_label.setdefault(label,
-                                    []).append(Object(label, obj.score, bbox))
+        objects_by_label.setdefault(label, []).append(Object(label, obj.score, bbox))
+        print(label)
+        
+      
 
   for label, objects in objects_by_label.items():
     idxs = non_max_suppression(objects, args.iou_threshold)
+    
     for idx in idxs:
       draw_object(draw, objects[idx])
 

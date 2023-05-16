@@ -59,7 +59,7 @@ def main():
         photo_url = upload_to_cloud_storage(photo_path, bucket_name, destination_blob_name)
 
         print(f"Photo uploaded to: {photo_url}")
-
+            
         # Increment the photo counter
         photo_counter += 1
 
