@@ -27,14 +27,14 @@ def process_image_with_google_coral_edge_tpu(image_path, model, labels):
         "--tile_size", "1352x900,500x500,250x250",
         "--tile_overlap", "50",
         "--score_threshold", "0.25",
-        "--output", f"processed_{image_path}"
+        "--output", f"{PREFIX}{image_path}"
     ]
 
     # Run the command
     subprocess.run(cmd, check=True)
 
     # Return the path of the processed image
-    return f"processed_{image_path}"
+    return f"{PREFIX}{image_path}"
 
 # Iterate over all images in the bucket
 blobs = bucket.list_blobs()
@@ -42,13 +42,14 @@ blobs = bucket.list_blobs()
 for blob in blobs:
     # Only process if image hasn't been processed before
     if not blob.name.startswith(PREFIX):
-        # Download the image to local
-        blob.download_to_filename(blob.name)
-        
-        # Process the image
-        processed_image = process_image_with_google_coral_edge_tpu(blob.name, model, labels)
+        # Check if the processed image already exists in the bucket
+        if not bucket.blob(PREFIX + blob.name).exists():
+            # Download the image to local
+            blob.download_to_filename(blob.name)
+            
+            # Process the image
+            processed_image = process_image_with_google_coral_edge_tpu(blob.name, model, labels)
 
-        # Save the processed image back to the bucket with a prefix
-        new_blob = bucket.blob(PREFIX + blob.name)
-        new_blob.upload_from_filename(processed_image)
-
+            # Save the processed image back to the bucket with a prefix
+            new_blob = bucket.blob(PREFIX + blob.name)
+            new_blob.upload_from_filename(processed_image)
