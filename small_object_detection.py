@@ -110,7 +110,8 @@ def main():
 
   if args.output:
     img.save(args.output)
-    print(f"Saved result at {args.output}")
+ #   print(f"Saved result at {args.output}")
+    print(object_labels_list)
 
 
   return object_labels_list
