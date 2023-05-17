@@ -1,21 +1,18 @@
-from flask import Flask, render_template, Response 
-import cv2
+from flask import Flask, render_template, Response
+import subprocess
 
 app = Flask(__name__)
 
 def video_feed():
-    cap = cv2.VideoCapture(0) 
+    command = 'fswebcam --no-banner -r 640x480 -'
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
 
     while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+        frame = process.stdout.read(640 * 480 * 3)
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
-        ret, jpeg = cv2.imencode('.jpg', frame)
-        frame_bytes = jpeg.tobytes()
-        yield (b' --frame\r\n'
-               b'Content-Type: image/jpeg\r\n\r\n' + frame_bytes + b'\r\n\r\n')
-@app.route('/video_feed') 
+@app.route('/video_feed')
 def video_feed_route():
     return Response(video_feed(), mimetype='multipart/x-mixed-replace; boundary=frame')
 
@@ -23,5 +20,3 @@ def video_feed_route():
 def index():
     return render_template('index.html')  # Create an HTML template file named 'index.html' in the same directory
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)  # Set the desired host and port
