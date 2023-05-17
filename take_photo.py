@@ -63,7 +63,6 @@ class Photo:
 
        #TODO: Add the processed image url as an attribute to the instance of the Photo class
 
-
     def upload(self, destination_blob_prefix='photo'):
         # Upload the photo to the bucket
         self.blob = self.bucket.blob(f'{destination_blob_prefix}{self.photo_id}.jpg')
@@ -108,10 +107,10 @@ def main():
         # Upload the photo to Google Cloud Storage
         photo_url = photo.upload()
 
-        print(f"Photo uploaded to: {photo_url}")
+        print(f"Photo uploaded to: {photo_url}") 
 
       #  photo.added_labels.extend(object_labels_list)
-       # print(photo.added_labels)
+      #  print(photo.added_labels)
             
         # Increment the photo counter
         photo_counter += 1
@@ -119,11 +118,9 @@ def main():
         # Check if the user wants to quit
         if input("Continue taking photos? (y/n): ").lower() != 'y':
             break
-
 if __name__ == '__main__':
     main()
         
-
 """
 import subprocess
 from google.cloud import storage
@@ -161,9 +158,7 @@ def list_bucket_images(bucket_name):
     return len(image_names)
         
 bucket_name = 'raspberrypi4'
-list_bucket_images(bucket_name)
-
-        
+list_bucket_images(bucket_name)       
 
 def main():
     # Configuration

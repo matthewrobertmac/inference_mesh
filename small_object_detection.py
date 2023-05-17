@@ -8,7 +8,7 @@ from PIL import ImageDraw
 from pycoral.adapters import common
 from pycoral.adapters import detect
 from pycoral.utils.dataset import read_label_file
-from pycoral.utils.edgetpu import make_interpreter
+from pycoral.utils.edgetpu import *
 
 Object = collections.namedtuple('Object', ['id', 'label', 'score', 'bbox'])
 
@@ -105,12 +105,12 @@ def main():
     object_labels = f"Label: {objects[idx].label}, Probability: {objects[idx].score}"
     object_labels_list.append(object_labels)
 
-
   img.show()
 
   if args.output:
     img.save(args.output)
     print(f"Saved result at {args.output}")
+    
 
 
   return object_labels_list
