@@ -51,8 +51,10 @@ class Photo:
    # Call the function from small_object_detection.py and get the object labels list
 
    # Add the object labels list to added_labels
-       self.added_labels.extend(object_labels_list)
-       print(self.added_labels)
+   #    print(object_labels_list)
+
+    #   self.added_labels.extend(object_labels_list)
+     #  print(self.added_labels)
 
        # Save the processed image back to the bucket with a prefix
        new_blob = self.bucket.blob(join(self.PREFIX + self.blob.name))
