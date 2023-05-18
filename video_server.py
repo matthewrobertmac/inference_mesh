@@ -3,12 +3,24 @@ import subprocess
 
 app = Flask(__name__)
 
+def read_frame(process):
+    image_data = b''
+    while True:
+        data = process.stdout.read(1)
+        if not data:
+            break
+        image_data += data
+        if image_data[-2:] == b'\xff\xd9':
+            # End of a JPEG image
+            break
+    return image_data
+
 def video_feed():
-    command = 'fswebcam --no-banner -r 640x480 -'
-    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE)
+    command = "ffmpeg -f video4linux2 -i /dev/video0 -vf fps=10 -f image2pipe -vcodec mjpeg -"
+    process = subprocess.Popen(command.split(), stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
 
     while True:
-        frame = process.stdout.read(640 * 480 * 3)
+        frame = read_frame(process)
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n\r\n')
 
@@ -20,3 +32,5 @@ def video_feed_route():
 def index():
     return render_template('index.html')  # Create an HTML template file named 'index.html' in the same directory
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=8000, debug=True)
