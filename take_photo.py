@@ -3,6 +3,7 @@ from os import makedirs
 from os.path import join
 from google.cloud import storage
 from small_object_detection import object_labels_list
+import time
 
 class Photo:
     GCS_BUCKET = "raspberrypi4"
@@ -110,36 +111,96 @@ class Photo:
         for name in image_names:
             print(name)
         return len(image_names)
+    
+def terminal_interface(inputV = '0'):
+    
+    if inputV == '0':
+        print("Welcome to this poorly scripted terminal interface, by yours truly Bobster 🗿")
+        time.sleep(2)
+        print("What would you like to do for today from the list?")
+        time.sleep(1)
+        terminal_interface('1')
+    elif inputV == '1':
+        print("1: I would like to take a photo in 4k")
+        print("2: I would like to take a video in 8k")
+        print("3: Let's do some people watching today")
+        print("4: Would you like to learn more about Tensorflow Lite")
+        print("5: Would you like to learn about Mobile Net ?(The Model)")
+        inp = input("Enter a number please\n")
+        if inp == '1':
+            print("Taking Photo")
+            take_a_photo()
+           
+        elif inp == '2':
+            print("Taking Video")
+            
+        elif inp == '3':
+            print("Taking Photo")
+         
+        elif inp == '4':
+            print("Learning about Tensorflow Lite")
+        
+        elif inp == '5':
+            print("Learning about Mobile Net the Model")             
+        else: 
+            print("Please select from the options below.")
+            time.sleep(1.5)
+            terminal_interface('1')
+    elif inputV == '6':
+        print("Would you like to do anything else ? y / n ")
+        inp2 = input()
+        if inp2 == 'y':
+            time.sleep(1.25)
+            terminal_interface('1')
+        elif inp2 == 'n':
+            print("Committing force closure :(")
+            return print("Successfully went to sleep")
+        else: 
+            print("A simple yes or no question is it not ? 🤨")
+            terminal_interface('6')
+    
 
-def main():
-    # Configuration
+def take_a_photo():
+        # Configuration
+
     bucket_name = 'raspberrypi4'
     photo_counter = Photo.list_bucket_images(bucket_name)
-
+     # Prompt the user to take a photo
     while True:
-        # Prompt the user to take a photo
-        input("Press Enter to take a photo (or 'q' to quit): ")
+        if input("Press Enter to take a photo (or 'q' to quit): ").lower() == 'q':
+           return terminal_interface('6')
+       
 
-        # Create a new photo instance
+    #     # Create a new photo instance
         photo = Photo(photo_counter, bucket_name)
 
-        # Capture the photo
+    #     # Capture the photo
         photo.take()
 
-        # Upload the photo to Google Cloud Storage
+    #     # Upload the photo to Google Cloud Storage
         photo_url = photo.upload()
 
-        print(f"Photo uploaded to: {photo_url}")
+    #     print(f"Photo uploaded to: {photo_url}")
 
-      #  photo.added_labels.extend(object_labels_list)
-       # print(photo.added_labels)
+    #   #  photo.added_labels.extend(object_labels_list)
+    #    # print(photo.added_labels)
             
-        # Increment the photo counter
+    #     # Increment the photo counter
         photo_counter += 1
 
         # Check if the user wants to quit
+
         if input("Continue taking photos? (y/n): ").lower() != 'y':
+            terminal_interface('6')
             break
+        
+            
+
+def main():
+    
+        terminal_interface()
+        
+       
 
 if __name__ == '__main__':
     main()
