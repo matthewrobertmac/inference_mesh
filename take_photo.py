@@ -2,7 +2,6 @@ import subprocess
 from os import makedirs
 from os.path import join
 from google.cloud import storage
-from small_object_detection import object_labels_list
 import time
 
 class Photo:
@@ -59,7 +58,7 @@ class Photo:
            "--model", self.model,
            "--label", self.labels,
            "--input", join(self.photo_path),
-           "--tile_size", "1352x900,500x500,250x250",
+           "--tile_size", "1352x900,700x700, 500x500, 250x250",
            "--tile_overlap", "50",
            "--score_threshold", "0.25",
            "--output", join(f"{self.PREFIX}{self.photo_path}")
