@@ -128,14 +128,17 @@ def terminal_interface(inputV = '0'):
         print("5: Would you like to learn about Mobile Net ?(The Model)")
         inp = input("Enter a number please\n")
         if inp == '1':
-            print("Taking Photo")
             take_a_photo()
            
         elif inp == '2':
             print("Taking Video")
-            
+            time.sleep(2)
+            terminal_interface('6')
+
         elif inp == '3':
-            print("Taking Photo")
+            print("Lets watch people :)")
+            time.sleep(2)
+            terminal_interface('6')
          
         elif inp == '4':
             print("TensorFlow Lite is a lightweight machine learning framework developed by Google that allows efficient deployment of machine learning models on resource-constrained devices such as smartphones, IoT devices, and microcontrollers. It provides a way to optimize and compress models to reduce their size while maintaining high performance, making them suitable for on-device inference. TensorFlow Lite supports a wide range of hardware accelerators, enabling efficient execution of models, and offers APIs for various programming languages, facilitating integration into different application ecosystems. With TensorFlow Lite, developers can bring the power of machine learning to edge devices, enabling them to perform tasks such as image recognition, voice recognition, and natural language processing directly on the device, without relying on a cloud server.")
