@@ -138,10 +138,10 @@ def terminal_interface(inputV = '0'):
             print("Taking Photo")
          
         elif inp == '4':
-            print("Learning about Tensorflow Lite")
+            print("TensorFlow Lite is a lightweight machine learning framework developed by Google that allows efficient deployment of machine learning models on resource-constrained devices such as smartphones, IoT devices, and microcontrollers. It provides a way to optimize and compress models to reduce their size while maintaining high performance, making them suitable for on-device inference. TensorFlow Lite supports a wide range of hardware accelerators, enabling efficient execution of models, and offers APIs for various programming languages, facilitating integration into different application ecosystems. With TensorFlow Lite, developers can bring the power of machine learning to edge devices, enabling them to perform tasks such as image recognition, voice recognition, and natural language processing directly on the device, without relying on a cloud server.")
         
         elif inp == '5':
-            print("Learning about Mobile Net the Model")             
+            print("MobileNetV2 is a highly efficient and lightweight convolutional neural network architecture designed for mobile and embedded devices. It builds upon the success of its predecessor, MobileNetV1, by introducing improvements that enhance accuracy while maintaining low computational complexity. MobileNetV2 incorporates a combination of depthwise separable convolutions, bottleneck structures, and linear bottlenecks, which reduce the number of parameters and operations required for inference. It also employs a novel inverted residual block that enhances information flow and allows for better feature representation. MobileNetV2 achieves an optimal balance between model size and accuracy, making it well-suited for applications such as real-time object detection, image classification, and semantic segmentation on resource-constrained devices.")             
         else: 
             print("Please select from the options below.")
             time.sleep(1.5)
