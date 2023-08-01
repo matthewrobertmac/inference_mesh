@@ -64,40 +64,27 @@ class Photo:
         return len(image_names)
 
 
-def terminal_interface(inputV = '0'):
-    if inputV == '0':
-        print("Welcome to this poorly scripted terminal interface, by yours truly Bobster 🗿")
-        time.sleep(2)
-        print("What would you like to do for today from the list?")
-        time.sleep(1)
-        terminal_interface('1')
-    elif inputV == '1':
-        print("1: I would like to take a photo in 4k")
-        print("2: I would like to take a photo burst")
-        print("3: Let's do some people watching today")
-        print("4: Would you like to learn more about Tensorflow Lite")
-        print("5: Would you like to learn about Mobile Net ?(The Model)")
-        inp = input("Enter a number please\n")
+def terminal_interface():
+    while True:
+        print("\nInference Mesh")
+        print("Please choose an option from the list:")
+        print("1: Take a Photo")
+        print("2: Take a Photo Burst")
+        print("3: Run Video Server")
+        print("4: Exit")
+
+        inp = input("Enter a number: ")
         if inp == '1':
             take_a_photo()
         elif inp == '2':
             take_photo_burst()
         elif inp == '3':
-            print("Lets watch people :)")
             subprocess.run(['python3', 'video_server.py'], check=True)
-            terminal_interface('6')
         elif inp == '4':
-            print("TensorFlow Lite is a lightweight machine learning framework developed by Google...")
-            time.sleep(2)
-            terminal_interface('6')
-        elif inp == '5':
-            print("MobileNetV2 is a highly efficient and lightweight convolutional neural network architecture designed for mobile and embedded devices.")
-            time.sleep(2)
-            terminal_interface('6')
+            print("Exiting Inference Mesh...")
+            break
         else: 
-            print("Please select from the options below.")
-            time.sleep(1.5)
-            terminal_interface('1')
+            print("Invalid input. Please select a number from the options below.")
 
 def take_a_photo():
     bucket_name = 'raspberrypi4'

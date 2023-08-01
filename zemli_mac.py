@@ -1,6 +1,5 @@
 import subprocess
-from os import makedirs
-from os.path import join
+from os import makedirs, path
 from google.cloud import storage
 import time
 
@@ -24,6 +23,11 @@ class Photo:
 
         makedirs(self.PHOTOS_DIR, exist_ok=True)
 
+        if not path.exists(self.model):
+            raise FileNotFoundError(f"Model file '{self.model}' not found.")
+        if not path.exists(self.labels):
+            raise FileNotFoundError(f"Labels file '{self.labels}' not found.")
+
     def take(self):
         subprocess.run(['ffmpeg', '-f', 'avfoundation', '-video_size', '1280x720', '-i', 'default', '-vframes', '1', self.photo_path])
 
@@ -33,16 +37,16 @@ class Photo:
             "small_object_detection.py",
             "--model", self.model,
             "--label", self.labels,
-            "--input", join(self.photo_path),
+            "--input", self.photo_path,
             "--tile_size", "1352x900,700x700, 500x500, 250x250",
             "--tile_overlap", "50",
             "--score_threshold", "0.25",
-            "--output", join(f"{self.PREFIX}{self.photo_path}")
+            "--output", self.PREFIX+self.photo_path
         ]
         subprocess.run(cmd, check=True)
-        self.processed_photo_path = join(f"{self.PREFIX}{self.photo_path}")
+        self.processed_photo_path = self.PREFIX+self.photo_path
 
-        new_blob = self.bucket.blob(join(self.PREFIX + self.blob.name))
+        new_blob = self.bucket.blob(self.PREFIX + self.blob.name)
         new_blob.upload_from_filename(self.processed_photo_path)
 
     def upload(self, destination_blob_prefix='photo'):
@@ -63,7 +67,6 @@ class Photo:
             print(name)
         return len(image_names)
 
-
 def terminal_interface(inputV = '0'):
     if inputV == '0':
         print("Welcome to this poorly scripted terminal interface, by yours truly Bobster 🗿")
@@ -72,11 +75,9 @@ def terminal_interface(inputV = '0'):
         time.sleep(1)
         terminal_interface('1')
     elif inputV == '1':
-        print("1: I would like to take a photo in 4k")
+        print("1: I would like to take a photo")
         print("2: I would like to take a photo burst")
-        print("3: Let's do some people watching today")
-        print("4: Would you like to learn more about Tensorflow Lite")
-        print("5: Would you like to learn about Mobile Net ?(The Model)")
+        print("3: Live video server")
         inp = input("Enter a number please\n")
         if inp == '1':
             take_a_photo()
@@ -85,14 +86,6 @@ def terminal_interface(inputV = '0'):
         elif inp == '3':
             print("Lets watch people :)")
             subprocess.run(['python3', 'video_server.py'], check=True)
-            terminal_interface('6')
-        elif inp == '4':
-            print("TensorFlow Lite is a lightweight machine learning framework developed by Google...")
-            time.sleep(2)
-            terminal_interface('6')
-        elif inp == '5':
-            print("MobileNetV2 is a highly efficient and lightweight convolutional neural network architecture designed for mobile and embedded devices.")
-            time.sleep(2)
             terminal_interface('6')
         else: 
             print("Please select from the options below.")
