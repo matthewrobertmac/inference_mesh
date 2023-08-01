@@ -11,7 +11,7 @@ from IPython.display import HTML, display
 
 LIGHTNING_MODEL_PATH = "/Users/mattmacfarlane/Development/code/projects/inference_mesh/movenet_single_pose_lightning_ptq_edgetpu.tflite"
 THUNDER_MODEL_PATH = "/Users/mattmacfarlane/Development/code/projects/inference_mesh/movenet_single_pose_thunder_ptq_edgetpu.tflite"
-model_name = "movenet_lightning" # Change to "movenet_thunder" to use the thunder model
+model_name = "movenet_lightning" # Change to "movenet_thunder" (or "movenet_lightning") 
 
 if model_name == "movenet_lightning":
     model_path = LIGHTNING_MODEL_PATH

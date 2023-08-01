@@ -10,6 +10,7 @@ class Photo:
     PHOTOS_DIR = "photos"
     PREFIX = "processed_"
     model = "ssd_mobilenet_v2_coco_quant_no_nms_edgetpu.tflite"
+    face_model = "/Users/mattmacfarlane/Development/code/projects/inference_mesh/ssd_mobilenet_v2_face_quant_postprocess_edgetpu.tflite"
     labels = "coco_labels.txt"
 
     def __init__(self, photo_id, bucket_name, client_name=GOOGLE_CLOUD_PROJECT):
@@ -67,6 +68,16 @@ class Photo:
         for name in image_names:
             print(name)
         return len(image_names)
+    
+    def detect_faces(self):
+        cmd = [
+            "python3",
+            "video_object_detection.py",
+            "--model", self.face_model,
+            "--input", self.photo_path,
+        ]
+        subprocess.run(cmd, check=True)
+
 
 def upload_a_photo():
     bucket_name = 'raspberrypi4'
@@ -148,6 +159,8 @@ def terminal_interface(inputV = '0'):
         print("3: Live video server")
         print("4: Upload photo")
         print("5: Upload all photos in directory")
+        print("6: Live face detection")
+        print("7: Movenet Live pose estimation")
         inp = input("Enter a number\n")
         if inp == '1':
             take_a_photo()
@@ -161,8 +174,16 @@ def terminal_interface(inputV = '0'):
             upload_a_photo()
         elif inp == '5':
             upload_all_photos_in_directory()
-        else: 
-            print("Select an option.")
+        elif inp == '6':
+            print("Starting live face detection")
+            subprocess.run(['python3', 'video_object_detection.py', '--model', Photo.face_model], check=True)
+            terminal_interface('1')
+        elif inp == '7': 
+            print("Starting live pose estimation")
+            subprocess.run(['python3', 'movenet_live.py'], check=True)
+            terminal_interface('1')
+        else:
+            print("Invalid input")
             terminal_interface('1')
 
 def main():
