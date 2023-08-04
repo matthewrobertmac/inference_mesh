@@ -10,7 +10,7 @@ class Photo:
     PHOTOS_DIR = "photos"
     PREFIX = "processed_"
     model = "ssd_mobilenet_v2_coco_quant_no_nms_edgetpu.tflite"
-    face_model = "/Users/mattmacfarlane/Development/code/projects/inference_mesh/ssd_mobilenet_v2_face_quant_postprocess_edgetpu.tflite"
+    face_model = "ssd_mobilenet_v2_face_quant_postprocess_edgetpu.tflite"
     labels = "coco_labels.txt"
 
     def __init__(self, photo_id, bucket_name, client_name=GOOGLE_CLOUD_PROJECT):
